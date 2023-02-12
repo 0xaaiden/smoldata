@@ -10,9 +10,9 @@ module.exports = {
   'tailwindCSS.includeLanguages': {
     plaintext: 'html',
     javascript: 'javascriptreact'
-  }
+  },
+  plugins: [require('@tailwindcss/forms')]
   //desactivate preflight
-  
 
   // prefix: 'tw-',
   // plugins: [require('daisyui')]

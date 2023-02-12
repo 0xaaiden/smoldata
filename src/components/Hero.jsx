@@ -1,12 +1,22 @@
-import React from 'react';
+import { checkPropTypes } from 'prop-types';
+import { React } from 'react';
+// import { AuthContext } from '../contexts/AuthContext';
+// import { useContext } from 'react';
 
-const Hero = () => {
+const Hero = ({ userData }) => {
+  // const { user } = useContext(AuthContext);
+  // console.log(user, 'our user was');
+
+  // useEffect (() => {
+  //   console.log(user, 'our user is');
+
   return (
     <div className="content-header">
       <div className="content-header-inner">
         <h1 className="content-header-title">
-          indexsc. <br />
-          Index smart contracts in seconds<small>[n] Smart Contracts active</small>
+          Welcome to your dashboard, {userData ? userData.displayName : ''}
+          <br />
+          <small>{userData ? userData.smart_contracts.length : 0} Smart Contracts active</small>
         </h1>
         {/* <div className="content-header-info">
           Available funds to invest: $435.00{' '}
@@ -20,6 +30,11 @@ const Hero = () => {
       </div> */}
     </div>
   );
+};
+
+//prop types
+Hero.propTypes = {
+  userData: checkPropTypes.any
 };
 
 export default Hero;

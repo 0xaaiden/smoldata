@@ -19,8 +19,8 @@ const Index = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Homepage />} />
-          <Route path="*" element={<h1>404: Not Found</h1>} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          {/* <Route path="*" element={<h1>404: Not Found</h1>} /> */}
+          <Route path="/dashboard/*" element={<Dashboard />} />
         </Routes>
       </BrowserRouter>
     </div>

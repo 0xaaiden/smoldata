@@ -1,16 +1,31 @@
 import React from 'react';
+import PropTypes from 'prop-types'; // ES6
+import { Link } from 'react-router-dom';
+const Content = ({ userData }) => {
+  // console.log('userData', userData);
+  if (userData === null) {
+    return (
+      <></>
+      // <div className="content-body">
+    );
+  }
 
-const Content = () => {
   return (
     <div className="content-body">
       <section className="overview">
         <header className="overview-header">
           <h2 className="overview-header-title">
-            Smart Contracts<span>[number]</span>
+            {/* {console.log('content data', userData)} */}
+            Smart Contracts<span>[{userData.smart_contracts.length}]</span>
           </h2>
-          <a href="#" className="link">
-            View all
-          </a>
+          <div>
+            <Link to="addContract" className="link mr-4">
+              Add new contract
+            </Link>
+            <a href="#" className="link">
+              View all
+            </a>
+          </div>
         </header>
         <div className="overview-body">
           <div className="summary">
@@ -98,6 +113,11 @@ const Content = () => {
       </section>
     </div>
   );
+};
+
+//prop types
+Content.propTypes = {
+  userData: PropTypes.object
 };
 
 export default Content;

@@ -2,6 +2,7 @@ import { GithubAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../firebase/config';
 import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import { createUserDocument } from "../firebase/createUserDocument";
 
 export const useLogin = () => {
   const [error, setError] = useState(false);
@@ -20,6 +21,7 @@ export const useLogin = () => {
       }
 
       const user = res.user;
+      await createUserDocument(user);
       dispatch({ type: "LOGIN", payload: user });
       // console.log(user);
       setIsPending(false);
