@@ -16,7 +16,7 @@ const Hero = ({ userData }) => {
         <h1 className="content-header-title">
           Welcome to your dashboard, {userData ? userData.displayName : ''}
           <br />
-          <small>{userData ? userData.smart_contracts.length : 0} Smart Contracts active</small>
+          <small>{userData ? userData.smart_contracts.length : 0} Smart Contracts indexed</small>
         </h1>
         {/* <div className="content-header-info">
           Available funds to invest: $435.00{' '}

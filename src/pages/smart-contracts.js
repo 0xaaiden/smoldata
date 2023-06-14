@@ -1,30 +1,44 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types'; // ES6
-import { Link } from 'react-router-dom';
-import { doc, getDoc } from 'firebase/firestore';
-import { db as fsDatabase } from '../firebase/config';
-import { v4 as uuid4 } from 'uuid';
-import { Menu, Transition } from '@headlessui/react';
-import { DownloadIcon, TrashIcon, CheckIcon, RefreshIcon } from '@heroicons/react/outline';
-import Tippy from '@tippyjs/react';
-import 'tippy.js/dist/tippy.css'; // optional for styling
-import 'tippy.js/themes/light-border.css';
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types"; // ES6
+import { Link } from "react-router-dom";
+import { doc, getDoc } from "firebase/firestore";
+import { db as fsDatabase } from "../firebase/config";
+import { v4 as uuid4 } from "uuid";
+import { Menu, Transition } from "@headlessui/react";
+import { AuthContext } from "../contexts/AuthContext";
 
-const Content = ({ userData, searchQuery }) => {
+import {
+  DownloadIcon,
+  TrashIcon,
+  CheckIcon,
+  RefreshIcon,
+} from "@heroicons/react/outline";
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css"; // optional for styling
+import "tippy.js/themes/light-border.css";
+import { useContext } from "react";
+import { Navigate } from "react-router-dom";
+import { fetchUser } from "../firebase/fetchUser";
+
+const SmartContracts = ({ searchQuery }) => {
   // console.log('userData', userData);
   const [contracts, setContracts] = useState([]);
   const [contractsLoaded, setContractsLoaded] = useState(false);
 
-  // console.log('contracts', contracts);
+  const [userData, setUserData] = useState(null);
+  const { user, loading } = useContext(AuthContext);
+  const [filteredContracts, setFilteredContracts] = useState(contracts);
+
   useEffect(() => {
     const fetchContracts = async () => {
       if (userData === null) {
         return;
       }
+
       const contractIds = userData.smart_contracts;
-      // console.log('contractIds', contractIds);
+      //   console.log("contractIds", contractIds);
       const contract = contractIds.map(async (contractId) => {
-        const getSc = await getDoc(doc(fsDatabase, 'contracts', contractId));
+        const getSc = await getDoc(doc(fsDatabase, "contracts", contractId));
         let scData;
         if (getSc.exists()) {
           scData = getSc.data();
@@ -39,60 +53,67 @@ const Content = ({ userData, searchQuery }) => {
       const contractsResolved = await Promise.all(contract);
 
       setContracts(contractsResolved);
-      setContractsLoaded(true);
+      setFilteredContracts(contractsResolved);
     };
     fetchContracts();
-
+    setContractsLoaded(true);
   }, [userData]);
 
-  // filter contracts based on searchQuery on contract.name and contract.address
   useEffect(() => {
-    console.log('searchQuery', searchQuery, contracts)
-    if (searchQuery === '' || !contractsLoaded) {
+    // console.log("searchQuery", searchQuery, contracts);
+    if (searchQuery === "" || !contractsLoaded) {
+      setFilteredContracts(contracts);
       return;
     }
-    const filteredContracts = contracts.filter((contract) => {
-      return contract.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        contract.address.toLowerCase().includes(searchQuery.toLowerCase());
-    }
+    setFilteredContracts(
+      contracts.filter((contract) => {
+        return (
+          contract.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          contract.address.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      })
     );
-    setContracts(filteredContracts);
+    //   setContracts(filteredContracts);
   }, [searchQuery, contractsLoaded]);
 
-  // filter contracts based on searchQuery on contract.name and contract.address
-  useEffect(() => {
-    console.log('searchQuery', searchQuery, contracts)
-    if (searchQuery === '') {
-      return;
-    }
-    const filteredContracts = contracts.filter((contract) => {
-      return contract.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        contract.address.toLowerCase().includes(searchQuery.toLowerCase());
-    }
-    );
-    setContracts(filteredContracts);
-  }, [searchQuery]);
-
-
-  if (userData === null) {
+  if (loading && !user) {
+    // console.log('Dashboard loading', loading, user);
     return (
-      <></>
-      // <div className="content-body">
+      <main className="main">
+        {/* <Nav /> */}
+        <div className="content">
+          <h1>Loading...</h1>
+        </div>
+      </main>
     );
+  } else if (!loading && !user) {
+    // console.log('Dashboard !loading', loading, user);
+    return <Navigate to="/" />;
   }
+  const load_user_data = async () => {
+    // console.log('calling');
+    const res = await fetchUser(user.uid);
+    console.log("res", res);
+    setUserData(res);
+  };
+  if (!userData) {
+    load_user_data();
+    return <div>Loading...</div>;
+  }
+
   const getEventBadges = (events) => {
     const eventNames = Object.keys(events);
     const firstThreeEvents = eventNames.slice(0, 3);
     const remainingEventsCount = eventNames.length - firstThreeEvents.length;
 
     const badgeColors = [
-      'bg-red-50',
-      'bg-yellow-50',
-      'bg-green-50',
-      'bg-blue-50',
-      'bg-indigo-50',
-      'bg-purple-50',
-      'bg-pink-50',
+      "bg-red-50",
+      "bg-yellow-50",
+      "bg-green-50",
+      "bg-blue-50",
+      "bg-indigo-50",
+      "bg-purple-50",
+      "bg-pink-50",
     ];
 
     if (remainingEventsCount === 0) {
@@ -123,7 +144,9 @@ const Content = ({ userData, searchQuery }) => {
             {firstThreeEvents.map((eventName, index) => (
               <span
                 key={eventName}
-                className={`inline-flex items-center rounded-md  px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10 ${badgeColors[index + 1]}`}
+                className={`inline-flex items-center rounded-md  px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10 ${
+                  badgeColors[index + 1]
+                }`}
               >
                 {eventName}
               </span>
@@ -137,7 +160,7 @@ const Content = ({ userData, searchQuery }) => {
         <>
           <div className="relative md:hidden">
             <Tippy
-              content={(
+              content={
                 <>
                   {eventNames.map((eventName, index) => (
                     <span
@@ -147,9 +170,8 @@ const Content = ({ userData, searchQuery }) => {
                       {eventName}
                     </span>
                   ))}
-
                 </>
-              )}
+              }
               placement="top"
               theme="light-border"
               animateFill={true}
@@ -157,7 +179,7 @@ const Content = ({ userData, searchQuery }) => {
             >
               <span
                 className={`inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10 tooltip ${badgeColors[0]}`}
-                data-tooltip={firstThreeEvents.join(', ')}
+                data-tooltip={firstThreeEvents.join(", ")}
               >
                 {eventNames.length} events
               </span>
@@ -167,7 +189,9 @@ const Content = ({ userData, searchQuery }) => {
             {firstThreeEvents.map((eventName, index) => (
               <span
                 key={eventName}
-                className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10  mb-2 ${badgeColors[index + 1]}`}
+                className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10  mb-2 ${
+                  badgeColors[index + 1]
+                }`}
               >
                 {eventName}
               </span>
@@ -175,16 +199,18 @@ const Content = ({ userData, searchQuery }) => {
             <Tippy
               content={
                 <div className=" flex gap-0.5">
-                  {(eventNames.slice(3)).map((eventName, index) => (
-
+                  {eventNames.slice(3).map((eventName, index) => (
                     <span
                       key={eventName}
-                      className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10 ${badgeColors[index + 4]}`}
+                      className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10 ${
+                        badgeColors[index + 4]
+                      }`}
                     >
                       {eventName}
                     </span>
                   ))}
-                </div>}
+                </div>
+              }
               placement="top"
               theme="light-border"
               animateFill={true}
@@ -195,8 +221,8 @@ const Content = ({ userData, searchQuery }) => {
               >
                 +{remainingEventsCount} more
               </span>
-            </Tippy >
-          </div >
+            </Tippy>
+          </div>
         </>
       );
     }
@@ -210,11 +236,12 @@ const Content = ({ userData, searchQuery }) => {
             Smart Contracts<span>[{userData.smart_contracts.length}]</span>
           </h2>
           <div className="flex gap-2  text-right">
-            <Link to="addContract" className="link hover:!no-underline !no-underline">
+            <Link
+              to="addContract"
+              className="link hover:!no-underline !no-underline"
+            >
               Add new contract
             </Link>
-
-
           </div>
         </header>
         <div className="overview-body">
@@ -223,7 +250,7 @@ const Content = ({ userData, searchQuery }) => {
             {/* <span className="summary-amount">+$87.01</span> */}
           </div>
           <div className="list">
-            {contracts.slice(0, 4).map((contract) => (
+            {filteredContracts.map((contract) => (
               <div className="list-item " key={uuid4()}>
                 <div className="list-item-company text-ellipsis  overflow-auto">
                   <div className="list-item-company-info overflow-hidden">
@@ -234,8 +261,8 @@ const Content = ({ userData, searchQuery }) => {
                       >
                         {/* ellipse width 60% */}
                         {/* show name and between parenthesis (0x0000...) */}
-                        {contract.name} ({contract.address.slice(0, 6)}...{contract.address.slice(-4)})
-
+                        {contract.name} ({contract.address.slice(0, 6)}...
+                        {contract.address.slice(-4)})
                       </Link>
                     </h4>
                     {getEventBadges(contract.events)}
@@ -244,28 +271,41 @@ const Content = ({ userData, searchQuery }) => {
                 <div className="list-item-transaction">
                   <div className="list-item-transaction-values !hidden md:!flex">
                     <span
-                      className={`list-item-transaction-value ${contract.status === 'pending' ? '' : 'list-item-transaction-value--positive'
-                        }`}>
-                      {contract.status === 'pending' ? (
+                      className={`list-item-transaction-value ${
+                        contract.status === "pending"
+                          ? ""
+                          : "list-item-transaction-value--positive"
+                      }`}
+                    >
+                      {contract.status === "pending" ? (
                         <>
                           <i className="ph-arrows-clockwise-bold"></i>Syncing
                         </>
                       ) : (
-                        'Complete'
+                        "Complete"
                       )}
                     </span>
-                    <time className="list-item-transaction-time" dateTime={contract.timestamp}>
-                      {new Date(contract.timestamp).toLocaleTimeString('en-US', {
-                        weekday: 'short',
-                        month: 'short',
-                        day: 'numeric',
-                        hour: 'numeric',
-                        minute: 'numeric',
-                        hour12: true
-                      })}
+                    <time
+                      className="list-item-transaction-time"
+                      dateTime={contract.timestamp}
+                    >
+                      {new Date(contract.timestamp).toLocaleTimeString(
+                        "en-US",
+                        {
+                          weekday: "short",
+                          month: "short",
+                          day: "numeric",
+                          hour: "numeric",
+                          minute: "numeric",
+                          hour12: true,
+                        }
+                      )}
                     </time>
                   </div>
-                  <Menu as="div" className="relative inline-block text-left z-110">
+                  <Menu
+                    as="div"
+                    className="relative inline-block text-left z-110"
+                  >
                     <Menu.Button className="list-item-transaction-action">
                       <i className="ph-caret-down-bold"></i>
                     </Menu.Button>
@@ -276,21 +316,26 @@ const Content = ({ userData, searchQuery }) => {
                       enterTo="transform opacity-100 scale-100"
                       leave="transition ease-in duration-75"
                       leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95">
+                      leaveTo="transform opacity-0 scale-95"
+                    >
                       <Menu.Items className="z-40 absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none origin-top-right">
                         <div className="py-1 px-1">
                           <Menu.Item className="md:hidden">
                             {({ active }) => (
                               <button
-                                className={`${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-                                  } flex items-center w-full px-4 py-2 text-sm  border-b-[0.5px] border-gray-400 border-opacity-50`}
-                                disabled={contract.status === 'pending'}
+                                className={`${
+                                  active
+                                    ? "bg-gray-100 text-gray-900"
+                                    : "text-gray-700"
+                                } flex items-center w-full px-4 py-2 text-sm  border-b-[0.5px] border-gray-400 border-opacity-50`}
+                                disabled={contract.status === "pending"}
                                 onClick={() => {
-                                  console.log('View clicked');
-                                }}>
+                                  console.log("View clicked");
+                                }}
+                              >
                                 {/* show syncing or pending */}
 
-                                {contract.status === 'pending' ? (
+                                {contract.status === "pending" ? (
                                   <>
                                     <RefreshIcon className="w-5 h-5 mr-2" />
                                     Syncing
@@ -306,17 +351,24 @@ const Content = ({ userData, searchQuery }) => {
                           </Menu.Item>
                           {/* add divider   headless*/}
 
-
                           <Menu.Item>
                             {({ active }) => (
                               <button
-                                className={`${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-                                  } ${contract.status === 'pending' ? " cursor-not-allowed" : ""} flex items-center w-full px-4 py-2 text-sm `}
-                                disabled={contract.status === 'pending'}
+                                className={`${
+                                  active
+                                    ? "bg-gray-100 text-gray-900"
+                                    : "text-gray-700"
+                                } ${
+                                  contract.status === "pending"
+                                    ? " cursor-not-allowed"
+                                    : ""
+                                } flex items-center w-full px-4 py-2 text-sm `}
+                                disabled={contract.status === "pending"}
                                 onClick={() => {
-                                  console.log('Download clicked');
-                                  window.open(contract.url, '_blank');
-                                }}>
+                                  console.log("Download clicked");
+                                  window.open(contract.url, "_blank");
+                                }}
+                              >
                                 <DownloadIcon className="w-5 h-5 mr-2" />
                                 Download
                               </button>
@@ -325,11 +377,15 @@ const Content = ({ userData, searchQuery }) => {
                           <Menu.Item>
                             {({ active }) => (
                               <button
-                                className={`${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-                                  } flex items-center w-full px-4 py-2 text-sm`}
+                                className={`${
+                                  active
+                                    ? "bg-gray-100 text-gray-900"
+                                    : "text-gray-700"
+                                } flex items-center w-full px-4 py-2 text-sm`}
                                 onClick={() => {
-                                  console.log('Delete clicked');
-                                }}>
+                                  console.log("Delete clicked");
+                                }}
+                              >
                                 <TrashIcon className="w-5 h-5 mr-2" />
                                 Delete
                               </button>
@@ -342,23 +398,16 @@ const Content = ({ userData, searchQuery }) => {
                 </div>
               </div>
             ))}
-
           </div>
         </div>
-        <footer className="overview-footer">
-          <a href="#" className="link">
-            View all Smart Contracts<i className="ph-arrow-right-bold"></i>
-          </a>
-        </footer>
       </section>
     </div>
   );
 };
 
 //prop types
-Content.propTypes = {
-  userData: PropTypes.object,
+SmartContracts.propTypes = {
   searchQuery: PropTypes.string,
 };
 
-export default Content;
+export default SmartContracts;

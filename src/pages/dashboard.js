@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
-import Hero from '../components/Hero';
-import Nav from '../components/Nav';
-import Content from '../components/Content';
-import { AuthContext } from '../contexts/AuthContext';
-import { useContext } from 'react';
-import { Navigate } from 'react-router-dom';
-import { fetchUser } from '../firebase/fetchUser';
-import {  Route, Routes } from 'react-router-dom';
-import { AddContract } from './addContract';
-export const Dashboard = () => {
+import React, { useState } from "react";
+import Hero from "../components/Hero";
+// import Nav from '../components/Nav';
+import Content from "../components/Content";
+import { AuthContext } from "../contexts/AuthContext";
+import { useContext } from "react";
+import { Navigate } from "react-router-dom";
+import { fetchUser } from "../firebase/fetchUser";
+import { Route, Routes } from "react-router-dom";
+import { AddContract } from "./addContract";
+import PropTypes from 'prop-types';
+
+export const Dashboard = ({ searchQuery }) => {
   const { user, loading } = useContext(AuthContext);
   const [userData, setUserData] = useState(null);
   // console.log('Dashboard', user, loading);
@@ -20,7 +22,7 @@ export const Dashboard = () => {
   //   // await setuserData(fetchUser(user.uid));
   // }, [loading]);
 
-  document.title = 'fn03/indexsc./dashboard';
+  document.title = "fn03/indexsc./dashboard";
   // console.log("first log", loading, user, !user)
   if (loading && !user) {
     // console.log('Dashboard loading', loading, user);
@@ -51,21 +53,36 @@ export const Dashboard = () => {
         <Hero userData={userData} />
         <br />
         <br />
-        <Content userData={userData} />
+        <Content userData={userData} searchQuery={searchQuery} />
       </div>
     );
   };
 
   return (
-    <main className="main">
-      {/* {console.log("rendering", loading, user)} */}
-      <Nav />
+    // <main className="main !block sm:!grid">
+
+    <div className="overflow-auto">
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="*" element={<h1>405: Not Found</h1>} />
-        <Route path="addContract" element={<AddContract />} />
+        <Route
+          path="addContract"
+          element={
+            <AddContract
+              user={user.uid}
+              contractIds={
+                userData && userData.smart_contracts ? userData.smart_contracts : null
+              }
+            />
+          }
+        />
       </Routes>
-      -{' '}
-    </main>
+    </div>
+
+    // </main>
   );
+};
+
+Dashboard.propTypes = {
+  searchQuery: PropTypes.string,
 };

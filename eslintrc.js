@@ -4,7 +4,7 @@ module.exports = {
     es2021: true,
     node: true
   },
-  extends: ['eslint:recommended', 'plugin:react/recommended', 'plugin:prettier/recommended'],
+  extends: ['eslint:recommended', 'plugin:react/recommended'],
   overrides: [],
   parserOptions: {
     ecmaFeatures: {
@@ -14,8 +14,7 @@ module.exports = {
     sourceType: 'module'
   },
 
-  plugins: ['react'],
-  rules: {
-    'prettier/prettier': 'warn'
-  }
+  plugins: ['react']
+
+
 };

@@ -1,21 +1,21 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
-import React, { useState, useEffect, useContext } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect, useContext } from "react";
+import PropTypes from "prop-types";
 // import Modal from 'react-bootstrap/Modal';
 // import Button from 'react-bootstrap/Button';
 // import Form from 'react-bootstrap/Form';
 // import m from './Magic';
-import { useRef } from 'react';
-import { useLogin } from '../hooks/useLogin';
-import { useLogout } from '../hooks/useLogout';
+import { useRef } from "react";
+import { useLogin } from "../hooks/useLogin";
+import { useLogout } from "../hooks/useLogout";
 
-import { AuthContext } from '../contexts/AuthContext';
+import { AuthContext } from "../contexts/AuthContext";
 
 // m.auth;
 
 const styleButton = {
-  width: '-webkit-fill-available'
+  width: "-webkit-fill-available",
 };
 
 const Connect = ({ display, setDisplay }) => {
@@ -25,10 +25,10 @@ const Connect = ({ display, setDisplay }) => {
   const user = useContext(AuthContext);
   let connected = false;
   if (user.user != null) {
-    console.log('user connected: ', user);
+    // console.log('user connected: ', user);
     connected = true;
   } else {
-    console.log('user not connected ', user);
+    // console.log('user not connected ', user);
   }
 
   const displayButton = () => {
@@ -40,9 +40,12 @@ const Connect = ({ display, setDisplay }) => {
           onClick={() => {
             setDisplay(false);
             login();
-          }}>
+          }}
+        >
           <span className="header-avatar-img ph-github-logo"></span>
-          <span className="header-avatar-name">{isPending ? 'Loading...' : 'Github Login'}</span>
+          <span className="header-avatar-name">
+            {isPending ? "Loading..." : "Github"}
+          </span>
         </button>
       );
     } else if (connected === true && display === true) {
@@ -53,9 +56,12 @@ const Connect = ({ display, setDisplay }) => {
             onClick={() => {
               setDisplay(false);
               logout();
-            }}>
+            }}
+          >
             <span className="header-avatar-img ph-github-logo"></span>
-            <span className="header-avatar-name">{isPending ? 'Loading...' : 'Logout'}</span>
+            <span className="header-avatar-name">
+              {isPending ? "Loading..." : "Sign Out"}
+            </span>
           </button>
           {/* // add a button to go to dashboard */}
         </>
@@ -64,7 +70,10 @@ const Connect = ({ display, setDisplay }) => {
   };
 
   return (
-    <div className="connect" style={{ display: display ? '' : 'none' }}>
+    <div
+      className="connect min-w-max"
+      style={{ display: display ? "" : "none" }}
+    >
       {displayButton()}
 
       {/* <ShowModal show={showModal} onHide={() => setShowModal(false)} /> */}
@@ -74,7 +83,7 @@ const Connect = ({ display, setDisplay }) => {
 
 Connect.propTypes = {
   display: PropTypes.bool.isRequired,
-  setDisplay: PropTypes.func.isRequired
+  setDisplay: PropTypes.func.isRequired,
 };
 // ShowModal.propTypes = {
 //   show: PropTypes.bool.isRequired,
