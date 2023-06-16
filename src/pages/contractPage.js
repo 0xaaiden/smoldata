@@ -141,7 +141,7 @@ function ContractStatusPage() {
                       }
                       
                     }`}
-                    style={{ width: `${progress}%` }}
+                    style={{ width: `${isComplete ? 100 : progress}%` }}
                   ></div>
                 </div>
               </div>
