@@ -76,7 +76,7 @@ function ContractStatusPage() {
           Go back to contracts
         </Link>
         <CircularProgressBar
-          selectedValue={progress}
+          selectedValue={isComplete ? 100 : progress}
           maxValue={100}
           strokeWidth={8}
           radius={100}
