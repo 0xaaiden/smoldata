@@ -6,6 +6,8 @@ import { db as fsDatabase } from "../firebase/config";
 import { v4 as uuid4 } from "uuid";
 import { Menu, Transition } from "@headlessui/react";
 import { AuthContext } from "../contexts/AuthContext";
+// import Skeleton from "react-loading-skeleton";
+// import "react-loading-skeleton/dist/skeleton.css";
 
 import {
   DownloadIcon,
@@ -19,7 +21,7 @@ import "tippy.js/themes/light-border.css";
 import { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import { fetchUser } from "../firebase/fetchUser";
-
+document.title = "Smoldata - Smart Contracts";
 const SmartContracts = ({ searchQuery }) => {
   // console.log('userData', userData);
   const [contracts, setContracts] = useState([]);
@@ -82,7 +84,7 @@ const SmartContracts = ({ searchQuery }) => {
       <main className="main">
         {/* <Nav /> */}
         <div className="content">
-          <h1>Loading...</h1>
+          <div>Loading..</div>
         </div>
       </main>
     );
@@ -250,154 +252,156 @@ const SmartContracts = ({ searchQuery }) => {
             {/* <span className="summary-amount">+$87.01</span> */}
           </div>
           <div className="list">
-            {filteredContracts.map((contract) => (
-              <div className="list-item " key={uuid4()}>
-                <div className="list-item-company text-ellipsis  overflow-auto">
-                  <div className="list-item-company-info overflow-hidden">
-                    <h4 className="mr-4 list-item-company-name overflow-hidden text-ellipsis">
-                      <Link
-                        to={`/contracts/${contract.id}`}
-                        className="text-gray-500 hover:text-gray-800"
+            {Object.values(filteredContracts)
+              .reverse()
+              .map((contract) => (
+                <div className="list-item " key={uuid4()}>
+                  <div className="list-item-company text-ellipsis  overflow-auto">
+                    <div className="list-item-company-info overflow-hidden">
+                      <h4 className="mr-4 list-item-company-name overflow-hidden text-ellipsis">
+                        <Link
+                          to={`/contracts/${contract.id}`}
+                          className="text-gray-500 hover:text-gray-800"
+                        >
+                          {/* ellipse width 60% */}
+                          {/* show name and between parenthesis (0x0000...) */}
+                          {contract.name} ({contract.address.slice(0, 6)}...
+                          {contract.address.slice(-4)})
+                        </Link>
+                      </h4>
+                      {getEventBadges(contract.events)}
+                    </div>
+                  </div>
+                  <div className="list-item-transaction">
+                    <div className="list-item-transaction-values !hidden md:!flex">
+                      <span
+                        className={`list-item-transaction-value ${
+                          contract.status === "pending"
+                            ? ""
+                            : "list-item-transaction-value--positive"
+                        }`}
                       >
-                        {/* ellipse width 60% */}
-                        {/* show name and between parenthesis (0x0000...) */}
-                        {contract.name} ({contract.address.slice(0, 6)}...
-                        {contract.address.slice(-4)})
-                      </Link>
-                    </h4>
-                    {getEventBadges(contract.events)}
+                        {contract.status === "pending" ? (
+                          <>
+                            <i className="ph-arrows-clockwise-bold"></i>Syncing
+                          </>
+                        ) : (
+                          "Complete"
+                        )}
+                      </span>
+                      <time
+                        className="list-item-transaction-time"
+                        dateTime={contract.timestamp}
+                      >
+                        {new Date(contract.timestamp).toLocaleTimeString(
+                          "en-US",
+                          {
+                            weekday: "short",
+                            month: "short",
+                            day: "numeric",
+                            hour: "numeric",
+                            minute: "numeric",
+                            hour12: true,
+                          }
+                        )}
+                      </time>
+                    </div>
+                    <Menu
+                      as="div"
+                      className="relative inline-block text-left z-110"
+                    >
+                      <Menu.Button className="list-item-transaction-action">
+                        <i className="ph-caret-down-bold"></i>
+                      </Menu.Button>
+                      <Transition
+                        as={React.Fragment}
+                        enter="transition ease-out duration-100"
+                        enterFrom="transform opacity-0 scale-95"
+                        enterTo="transform opacity-100 scale-100"
+                        leave="transition ease-in duration-75"
+                        leaveFrom="transform opacity-100 scale-100"
+                        leaveTo="transform opacity-0 scale-95"
+                      >
+                        <Menu.Items className="z-40 absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none origin-top-right">
+                          <div className="py-1 px-1">
+                            <Menu.Item className="md:hidden">
+                              {({ active }) => (
+                                <button
+                                  className={`${
+                                    active
+                                      ? "bg-gray-100 text-gray-900"
+                                      : "text-gray-700"
+                                  } flex items-center w-full px-4 py-2 text-sm  border-b-[0.5px] border-gray-400 border-opacity-50`}
+                                  disabled={contract.status === "pending"}
+                                  onClick={() => {
+                                    console.log("View clicked");
+                                  }}
+                                >
+                                  {/* show syncing or pending */}
+
+                                  {contract.status === "pending" ? (
+                                    <>
+                                      <RefreshIcon className="w-5 h-5 mr-2" />
+                                      Syncing
+                                    </>
+                                  ) : (
+                                    <>
+                                      <CheckIcon className="w-5 h-5 mr-2" />
+                                      Completed
+                                    </>
+                                  )}
+                                </button>
+                              )}
+                            </Menu.Item>
+                            {/* add divider   headless*/}
+
+                            <Menu.Item>
+                              {({ active }) => (
+                                <button
+                                  className={`${
+                                    active
+                                      ? "bg-gray-100 text-gray-900"
+                                      : "text-gray-700"
+                                  } ${
+                                    contract.status === "pending"
+                                      ? " cursor-not-allowed"
+                                      : ""
+                                  } flex items-center w-full px-4 py-2 text-sm `}
+                                  disabled={contract.status === "pending"}
+                                  onClick={() => {
+                                    console.log("Download clicked");
+                                    window.open(contract.url, "_blank");
+                                  }}
+                                >
+                                  <DownloadIcon className="w-5 h-5 mr-2" />
+                                  Download
+                                </button>
+                              )}
+                            </Menu.Item>
+                            <Menu.Item>
+                              {({ active }) => (
+                                <button
+                                  className={`${
+                                    active
+                                      ? "bg-gray-100 text-gray-900"
+                                      : "text-gray-700"
+                                  } flex items-center w-full px-4 py-2 text-sm`}
+                                  onClick={() => {
+                                    console.log("Delete clicked");
+                                  }}
+                                >
+                                  <TrashIcon className="w-5 h-5 mr-2" />
+                                  Delete
+                                </button>
+                              )}
+                            </Menu.Item>
+                          </div>
+                        </Menu.Items>
+                      </Transition>
+                    </Menu>
                   </div>
                 </div>
-                <div className="list-item-transaction">
-                  <div className="list-item-transaction-values !hidden md:!flex">
-                    <span
-                      className={`list-item-transaction-value ${
-                        contract.status === "pending"
-                          ? ""
-                          : "list-item-transaction-value--positive"
-                      }`}
-                    >
-                      {contract.status === "pending" ? (
-                        <>
-                          <i className="ph-arrows-clockwise-bold"></i>Syncing
-                        </>
-                      ) : (
-                        "Complete"
-                      )}
-                    </span>
-                    <time
-                      className="list-item-transaction-time"
-                      dateTime={contract.timestamp}
-                    >
-                      {new Date(contract.timestamp).toLocaleTimeString(
-                        "en-US",
-                        {
-                          weekday: "short",
-                          month: "short",
-                          day: "numeric",
-                          hour: "numeric",
-                          minute: "numeric",
-                          hour12: true,
-                        }
-                      )}
-                    </time>
-                  </div>
-                  <Menu
-                    as="div"
-                    className="relative inline-block text-left z-110"
-                  >
-                    <Menu.Button className="list-item-transaction-action">
-                      <i className="ph-caret-down-bold"></i>
-                    </Menu.Button>
-                    <Transition
-                      as={React.Fragment}
-                      enter="transition ease-out duration-100"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items className="z-40 absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none origin-top-right">
-                        <div className="py-1 px-1">
-                          <Menu.Item className="md:hidden">
-                            {({ active }) => (
-                              <button
-                                className={`${
-                                  active
-                                    ? "bg-gray-100 text-gray-900"
-                                    : "text-gray-700"
-                                } flex items-center w-full px-4 py-2 text-sm  border-b-[0.5px] border-gray-400 border-opacity-50`}
-                                disabled={contract.status === "pending"}
-                                onClick={() => {
-                                  console.log("View clicked");
-                                }}
-                              >
-                                {/* show syncing or pending */}
-
-                                {contract.status === "pending" ? (
-                                  <>
-                                    <RefreshIcon className="w-5 h-5 mr-2" />
-                                    Syncing
-                                  </>
-                                ) : (
-                                  <>
-                                    <CheckIcon className="w-5 h-5 mr-2" />
-                                    Completed
-                                  </>
-                                )}
-                              </button>
-                            )}
-                          </Menu.Item>
-                          {/* add divider   headless*/}
-
-                          <Menu.Item>
-                            {({ active }) => (
-                              <button
-                                className={`${
-                                  active
-                                    ? "bg-gray-100 text-gray-900"
-                                    : "text-gray-700"
-                                } ${
-                                  contract.status === "pending"
-                                    ? " cursor-not-allowed"
-                                    : ""
-                                } flex items-center w-full px-4 py-2 text-sm `}
-                                disabled={contract.status === "pending"}
-                                onClick={() => {
-                                  console.log("Download clicked");
-                                  window.open(contract.url, "_blank");
-                                }}
-                              >
-                                <DownloadIcon className="w-5 h-5 mr-2" />
-                                Download
-                              </button>
-                            )}
-                          </Menu.Item>
-                          <Menu.Item>
-                            {({ active }) => (
-                              <button
-                                className={`${
-                                  active
-                                    ? "bg-gray-100 text-gray-900"
-                                    : "text-gray-700"
-                                } flex items-center w-full px-4 py-2 text-sm`}
-                                onClick={() => {
-                                  console.log("Delete clicked");
-                                }}
-                              >
-                                <TrashIcon className="w-5 h-5 mr-2" />
-                                Delete
-                              </button>
-                            )}
-                          </Menu.Item>
-                        </div>
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
-                </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       </section>

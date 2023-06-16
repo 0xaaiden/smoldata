@@ -26,7 +26,7 @@ import { Navigate } from "react-router-dom";
 const projects = [
   {
     id: 1,
-    name: "EVM/Ethereum/Gearbox_Proxy_CA#1",
+    name: "UniswapV3Pool (0x5cf0...1633)",
     url: "#",
     events: [
       { id: 1, name: "Transfer", url: "#" },
@@ -36,7 +36,7 @@ const projects = [
   },
   {
     id: 2,
-    name: "EVM/Polygon/UniswapV3Pool_USDC/DAI",
+    name: "CompoundComptroller (0x3d9...b7b)",
     url: "#",
     events: [
       { id: 1, name: "Swap", url: "#" },
@@ -46,7 +46,7 @@ const projects = [
   },
   {
     id: 3,
-    name: "Rust/Near/RasinbowBridge_Deposit",
+    name: "Gearbox_Proxy_CA (0x5cf0...1633)",
     url: "#",
     events: [
       { id: 1, name: "Deposit", url: "#" },
@@ -73,11 +73,11 @@ const quickActions = [
     shortcut: "F",
     url: "#",
   },
-  { name: "Access database...", icon: CollectionIcon, shortcut: "D", url: "#" },
+  { name: "Sync database...", icon: CollectionIcon, shortcut: "D", url: "#" },
   // { name: 'Add label...', icon: TagIcon, shortcut: 'L', url: '#' }
 ];
 
-document.title = "fn03::indexsc.";
+document.title = "Smoldata - Zero-ETL indexing for smart contracts";
 export const Homepage = () => {
   const user = useContext(AuthContext);
   if (user.user) {
@@ -100,7 +100,7 @@ export const Homepage = () => {
         >
           <div className="content-header-inner md:text-start text-center">
             <a href="#" className="inline-flex space-x-4 mb-3">
-              <span className=" inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-orange-100 text-orange-800">
+              <span className="hidden md:inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-orange-100 text-orange-800">
                 stable v1.1.0
                 {/* <ChevronRightIcon className="h-5 w-5" aria-hidden="true" /> */}
               </span>
@@ -114,7 +114,7 @@ export const Homepage = () => {
               className="content-header-title"
               style={{ fontWeight: 600, fontFamily: "Inter" }}
             >
-              Lightning-fast on-chain indexing with Zero-ETL
+              Zero-ETL indexing for smart contracts
             </h1>
             {/* <br /> */}
             <p className="mt-3 text-gray-500 md:text-lg">
@@ -148,6 +148,7 @@ export const Homepage = () => {
               <Combobox.Input
                 className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm"
                 placeholder="Search..."
+                onChange={({ target }) => (query = target.value)}
               />
             </div>
 

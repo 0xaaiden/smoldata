@@ -8,7 +8,7 @@ import { Navigate } from "react-router-dom";
 import { fetchUser } from "../firebase/fetchUser";
 import { Route, Routes } from "react-router-dom";
 import { AddContract } from "./addContract";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 export const Dashboard = ({ searchQuery }) => {
   const { user, loading } = useContext(AuthContext);
@@ -22,7 +22,7 @@ export const Dashboard = ({ searchQuery }) => {
   //   // await setuserData(fetchUser(user.uid));
   // }, [loading]);
 
-  document.title = "fn03/indexsc./dashboard";
+  document.title = "Smoldata - Dashboard";
   // console.log("first log", loading, user, !user)
   if (loading && !user) {
     // console.log('Dashboard loading', loading, user);
@@ -71,7 +71,9 @@ export const Dashboard = ({ searchQuery }) => {
             <AddContract
               user={user.uid}
               contractIds={
-                userData && userData.smart_contracts ? userData.smart_contracts : null
+                userData && userData.smart_contracts
+                  ? userData.smart_contracts
+                  : null
               }
             />
           }
