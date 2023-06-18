@@ -1,6 +1,6 @@
 # Smoldata - Zero-ETL indexing for smart contracts
 
-![GitHub top language](https://img.shields.io/github/languages/top/username/smoldata) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/username/smoldata) ![GitHub](https://img.shields.io/github/license/username/smoldata) ![GitHub issues](https://img.shields.io/github/issues/username/smoldata) ![GitHub Repo stars](https://img.shields.io/github/stars/username/smoldata?style=social)
+![GitHub top language](https://img.shields.io/github/languages/top/0xaaiden/smoldata) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/0xaaiden/smoldata) ![GitHub](https://img.shields.io/github/license/0xaaiden/smoldata) ![GitHub issues](https://img.shields.io/github/issues/0xaaiden/smoldata) ![GitHub Repo stars](https://img.shields.io/github/stars/0xaaiden/smoldata?style=social)
 
 Smoldata is a platform that enables quick and easy indexing for smart contracts, eliminating the need for time-consuming ETL processes. It simplifies the process of ingesting smart contract data with minimal alterations and transformations. This repository consists of the frontend component of Smoldata. The indexing engine will be open-sourced in the future.
 
