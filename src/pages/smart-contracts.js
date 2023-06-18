@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types"; // ES6
 import { Link } from "react-router-dom";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  query,
+  getDocs,
+  collection,
+  where,
+  updateDoc,
+  arrayRemove,
+  deleteDoc,
+} from "firebase/firestore";
 import { db as fsDatabase } from "../firebase/config";
 import { v4 as uuid4 } from "uuid";
 import { Menu, Transition } from "@headlessui/react";
@@ -30,6 +40,7 @@ const SmartContracts = ({ searchQuery }) => {
   const [userData, setUserData] = useState(null);
   const { user, loading } = useContext(AuthContext);
   const [filteredContracts, setFilteredContracts] = useState(contracts);
+  const [key, setKey] = useState(0);
 
   useEffect(() => {
     const fetchContracts = async () => {
@@ -59,7 +70,7 @@ const SmartContracts = ({ searchQuery }) => {
     };
     fetchContracts();
     setContractsLoaded(true);
-  }, [userData]);
+  }, [userData, key]);
 
   useEffect(() => {
     // console.log("searchQuery", searchQuery, contracts);
@@ -78,6 +89,25 @@ const SmartContracts = ({ searchQuery }) => {
     //   setContracts(filteredContracts);
   }, [searchQuery, contractsLoaded]);
 
+  const deleteContract = async (contractTimestamp, userId, setKey) => {
+    // console.log("deleteContract", contractId);
+    const contractRef = query(
+      collection(fsDatabase, "contracts"),
+      where("timestamp", "==", contractTimestamp)
+    );
+
+    const contractSnapshot = await getDocs(contractRef);
+    contractSnapshot.forEach(async (doc) => {
+      await deleteDoc(doc.ref);
+    });
+
+    // remove from smart_contracts array
+    const userRef = doc(fsDatabase, "users", userId);
+    await updateDoc(userRef, {
+      smart_contracts: arrayRemove(contractSnapshot.docs[0].id),
+    });
+    setKey(uuid4());
+  };
   if (loading && !user) {
     // console.log('Dashboard loading', loading, user);
     return (
@@ -239,7 +269,7 @@ const SmartContracts = ({ searchQuery }) => {
           </h2>
           <div className="flex gap-2  text-right">
             <Link
-              to="addContract"
+              to="/dashboard/addContract"
               className="link hover:!no-underline !no-underline"
             >
               Add new contract
@@ -387,7 +417,11 @@ const SmartContracts = ({ searchQuery }) => {
                                       : "text-gray-700"
                                   } flex items-center w-full px-4 py-2 text-sm`}
                                   onClick={() => {
-                                    console.log("Delete clicked");
+                                    deleteContract(
+                                      contract.timestamp,
+                                      contract.id,
+                                      setKey
+                                    );
                                   }}
                                 >
                                   <TrashIcon className="w-5 h-5 mr-2" />

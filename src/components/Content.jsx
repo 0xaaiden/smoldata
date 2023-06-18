@@ -4,7 +4,13 @@ import { Link } from "react-router-dom";
 import {
   doc,
   getDoc,
-  // onSnapshot,
+  query,
+  collection,
+  where,
+  getDocs,
+  deleteDoc,
+  arrayRemove,
+  updateDoc,
 } from "firebase/firestore";
 import { db as fsDatabase } from "../firebase/config";
 import { v4 as uuid4 } from "uuid";
@@ -20,10 +26,31 @@ import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css"; // optional for styling
 import "tippy.js/themes/light-border.css";
 
+const deleteContract = async (contractTimestamp, userId, setKey) => {
+  // console.log("deleteContract", contractId);
+  const contractRef = query(
+    collection(fsDatabase, "contracts"),
+    where("timestamp", "==", contractTimestamp)
+  );
+
+  const contractSnapshot = await getDocs(contractRef);
+  contractSnapshot.forEach(async (doc) => {
+    await deleteDoc(doc.ref);
+  });
+
+  // remove from smart_contracts array
+  const userRef = doc(fsDatabase, "users", userId);
+  await updateDoc(userRef, {
+    smart_contracts: arrayRemove(contractSnapshot.docs[0].id),
+  });
+  setKey(uuid4());
+};
+
 const Content = ({ userData, searchQuery }) => {
   // console.log('userData', userData);
   const [contracts, setContracts] = useState([]);
   const [contractsLoaded, setContractsLoaded] = useState(false);
+  const [key, setKey] = useState(0);
 
   // console.log('contracts', contracts);
   useEffect(() => {
@@ -31,7 +58,12 @@ const Content = ({ userData, searchQuery }) => {
       if (userData === null) {
         return;
       }
-      const contractIds = userData.smart_contracts;
+
+      //refetch smart_contracts
+      const userRef = doc(fsDatabase, "users", userData.uid);
+      const userSnap = await getDoc(userRef);
+      const userData2 = userSnap.data();
+      const contractIds = userData2.smart_contracts;
       // console.log('contractIds', contractIds);
       const contract = contractIds.map(async (contractId) => {
         const getSc = await getDoc(doc(fsDatabase, "contracts", contractId));
@@ -52,7 +84,7 @@ const Content = ({ userData, searchQuery }) => {
       setContractsLoaded(true);
     };
     fetchContracts();
-  }, [userData]);
+  }, [userData, key]);
 
   // filter contracts based on searchQuery on contract.name and contract.address
   useEffect(() => {
@@ -388,8 +420,13 @@ const Content = ({ userData, searchQuery }) => {
                                   } flex items-center w-full px-4 py-2 text-sm`}
                                   onClick={() => {
                                     console.log("Delete clicked");
+                                    // delete firestore item based on timestamp
+                                    deleteContract(
+                                      contract.timestamp,
+                                      userData.uid,
+                                      setKey
+                                    );
                                   }}
-                                  disabled
                                 >
                                   <TrashIcon className="w-5 h-5 mr-2" />
                                   Delete

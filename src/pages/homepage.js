@@ -118,10 +118,10 @@ export const Homepage = () => {
             </h1>
             {/* <br /> */}
             <p className="mt-3 text-gray-500 md:text-lg">
-              Smoldata is Zero-ETL platform that delivers fast and simple
-              indexing for smart contracts. Replace time-consuming ETL processes
-              with direct data transfers between systems, and asynchronously
-              update your databases and API endpoints in real-time.
+              Smoldata is a platform that enables quick and easy indexing for
+              smart contracts, eliminating the need for time-consuming ETL
+              processes. It simplifies the process of ingesting smart contract
+              data with minimal alterations and transformations.
             </p>
             <form action="#" className="mt-8 sm:max-w-lg sm:w-full sm:flex">
               <div className="">
