@@ -1,70 +1,78 @@
-# Getting Started with Create React App
+# Smoldata - Zero-ETL indexing for smart contracts
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![GitHub top language](https://img.shields.io/github/languages/top/username/smoldata) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/username/smoldata) ![GitHub](https://img.shields.io/github/license/username/smoldata) ![GitHub issues](https://img.shields.io/github/issues/username/smoldata) ![GitHub Repo stars](https://img.shields.io/github/stars/username/smoldata?style=social)
 
-## Available Scripts
+Smoldata is a platform that enables quick and easy indexing for smart contracts, eliminating the need for time-consuming ETL processes. It simplifies the process of ingesting smart contract data with minimal alterations and transformations. This repository consists of the frontend component of Smoldata. The indexing engine will be open-sourced in the future.
 
-In the project directory, you can run:
+When a user submits a smart contract, it is added to a realtime queue, and a microservice backend pulls the smart contract and uses an internal queue to index smart contracts on a first-come, first-serve basis. Once indexing is complete, the user is notified, and a storage URL is provided to download the event logs.
 
-### `npm start`
+## Table of Contents
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- [Installation](#installation)
+- [Usage](#usage)
+- [Components](#components)
+- [Hooks](#hooks)
+- [Pages](#pages)
+- [Firebase Functions](#firebase-functions)
+- [AuthContext](#authcontext)
+- [License](#license)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Installation
 
-### `npm test`
+To install the project dependencies, run the following command:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+npm install
+```
 
-### `npm run build`
+## Usage
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+To run the project locally, use the following command:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm start
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+To build the project for production, use the following command:
 
-### `npm run eject`
+```bash
+npm run build
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Components
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- `Header.jsx`: Header component containing navigation items.
+- `homepage.jsx`: The homepage component.
+- `CircularBar.jsx`: A circular bar component.
+- `Nav.jsx`: The navigation component.
+- `Hero.jsx`: Hero section for the application.
+- `Connect.jsx`: Connect button component.
+- `Content.jsx`: Content component.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Hooks
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- `useLogout.js`: Custom hook for logging out users.
+- `useLogin.js`: Custom hook for logging in users.
 
-## Learn More
+## Pages
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- `addContract.js`: Page for adding new contracts.
+- `smart-contracts.js`: Page displaying all smart contracts.
+- `homepage.js`: The main homepage page.
+- `dashboard.js`: Dashboard page for users.
+- `contractPage.js`: Individual contract page.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Firebase Functions
 
-### Code Splitting
+- `fetchUsegit merge dev --allow-unrelated-historiesr.js`: Fetch user data from Firebase.
+- `createUserDocument.js`: Create a new user document in Firebase.
+- `config.js`: Firebase configuration file.
+- `submitContract.js`: Submit a new contract to Firebase.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## AuthContext
 
-### Analyzing the Bundle Size
+`AuthContext.js`: Provides an authentication context for the application.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## License
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project is open-sourced on GitHub and is available under the [MIT License](./LICENSE).
