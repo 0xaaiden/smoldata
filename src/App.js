@@ -1,6 +1,7 @@
 import React from 'react';
-import Index from './index.jsx';
-import AuthContextProvider from './contexts/AuthContext';
+import Index from './components/index';
+import AuthContextProvider from "./contexts/AuthContext";
+
 
 function App() {
   return (
