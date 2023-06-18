@@ -1,30 +1,13 @@
-<<<<<<< HEAD
 @import-normalize;
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Space+Mono:wght@400;700&display=swap");
 @import url('https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css');
 *, *:after, *:before {
-=======
-/* @import-normalize; */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Space+Mono:wght@400;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Chivo:wght@300;400;500;600;700;800;900&display=swap");
-
-/* @import url('https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css'); */
-*,
-*:after,
-*:before {
->>>>>>> dev
   box-sizing: border-box;
 }
 
 :root {
   --c-text-primary: #162121;
-<<<<<<< HEAD
   --c-text-secondary: #6D7680;
   --c-action-primary: #F29873;
   --c-action-primary-accent: #FAF5F1;
@@ -33,16 +16,6 @@
   --c-bg-primary: #FCFCFC;
   --c-bg-secondary: #F7F6FC;
   --c-bg-search: #F0F4F5;
-=======
-  --c-text-secondary: #6d7680;
-  --c-action-primary: #f29873;
-  --c-action-primary-accent: #faf5f1;
-  --c-action-secondary: #63c4b1;
-  --c-action-tertiary: #f9be31;
-  --c-bg-primary: #fcfcfc;
-  --c-bg-secondary: #f7f6fc;
-  --c-bg-search: #f0f4f5;
->>>>>>> dev
 }
 
 body {
@@ -53,20 +26,8 @@ body {
   color: var(--c-text-primary);
   padding: 2rem;
 }
-<<<<<<< HEAD
 
 input, select, button, textarea {
-=======
-@media (max-width: 768px) {
-  body {
-    padding: 10px;
-  }
-}
-input,
-select,
-button,
-textarea {
->>>>>>> dev
   font: inherit;
   color: inherit;
   outline: 0;
@@ -87,21 +48,6 @@ img {
   background-color: var(--c-bg-primary);
   min-height: calc(100vh - 4rem);
 }
-<<<<<<< HEAD
-
-=======
-/* on mobile devices change padding */
-@media (max-width: 768px) {
-  .earmark-app {
-    padding-top: 0.5rem;
-    padding-bottom: 1rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    border-radius: 0;
-    min-height: 100vh;
-  }
-}
->>>>>>> dev
 .header {
   display: flex;
   align-items: center;
@@ -124,55 +70,30 @@ img {
     display: none !important;
   }
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> dev
 .header-search {
   display: flex;
   position: relative;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> dev
 .header-nav {
   position: relative;
   display: inline-block;
   width: auto;
-<<<<<<< HEAD
-
-=======
->>>>>>> dev
 }
 
 /* make all icons white */
 .ph-github-logo {
   font-size: 1.5rem;
-<<<<<<< HEAD
   color: var(--c-action-primary-accent);
-=======
-  /* color: var(--c-action-primary-accent); */
->>>>>>> dev
 }
 
 .connect {
   position: absolute;
   display: block;
-<<<<<<< HEAD
   width : -webkit-fill-available;
   margin-top: .4rem;
   transition: opacity 0.1s ease-out;
   /* opacity: 0; */
 }
-=======
-  width: -webkit-fill-available;
-  margin-top: 0.4rem;
-  transition: opacity 0.1s ease-out;
-  /* opacity: 0; */
-}
-
->>>>>>> dev
 /*  connect button under header */
 /* .connect {
   align-self: center;
@@ -187,10 +108,6 @@ img {
   transition: width 380ms ease;
   width: 250px;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> dev
 .search-field:focus {
   width: 400px;
 }
@@ -207,25 +124,14 @@ img {
   align-items: center;
   justify-content: center;
 }
-<<<<<<< HEAD
 .search-btn i {
   font-size: 1.25rem;
   color: #ABB5BD;
-=======
-
-.search-btn i {
-  font-size: 1.25rem;
-  color: #abb5bd;
->>>>>>> dev
 }
 
 .header-connect {
   border-radius: 99em;
-<<<<<<< HEAD
   background-color: var(--c-action-primary);
-=======
-  /* background-color: var(--c-action-primary); */
->>>>>>> dev
   border: none;
   display: flex;
   align-items: center;
@@ -234,11 +140,7 @@ img {
   height: 3rem;
   /* transition: width 380ms ease; */
   width: auto;
-<<<<<<< HEAD
   
-=======
-
->>>>>>> dev
   cursor: pointer;
 }
 
@@ -248,20 +150,11 @@ img {
   transition: ease-out 0.2s;
 }
 
-<<<<<<< HEAD
 .ph-plugs, .ph-hand-waving {
   /* margin-left: 0.75rem;
   margin-right: 0.75rem; */
   font-size: 1.5rem;
   color: var(--c-action-primary-accent);
-=======
-.ph-plugs,
-.ph-hand-waving {
-  /* margin-left: 0.75rem;
-  margin-right: 0.75rem; */
-  font-size: 1.5rem;
-  /* color: var(--c-action-primary-accent); */
->>>>>>> dev
   /* font-weight: 400; */
 }
 
@@ -281,11 +174,7 @@ img {
 .header-avatar-name {
   margin-left: 0.5rem;
   margin-right: 0.75em;
-<<<<<<< HEAD
   color: var(--c-action-primary-accent);
-=======
-  /* color: var(--c-action-primary-accent); */
->>>>>>> dev
   font-weight: 400;
 }
 
@@ -294,11 +183,7 @@ img {
   display: grid;
   grid-template-columns: 1fr 4fr;
   -moz-column-gap: 5rem;
-<<<<<<< HEAD
        column-gap: 5rem;
-=======
-  column-gap: 5rem;
->>>>>>> dev
 }
 
 .tabs {
@@ -309,10 +194,6 @@ img {
 .tab {
   display: flex;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> dev
 .tab + .tab {
   margin-top: 0.5rem;
 }
@@ -327,48 +208,25 @@ img {
   width: 100%;
   font-weight: 500;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> dev
 .tab-btn i {
   margin-right: 0.75rem;
   font-size: 1.25em;
   color: var(--c-text-secondary);
 }
-<<<<<<< HEAD
 .tab-btn--active, .tab-btn:hover {
-=======
-
-.tab-btn--active,
-.tab-btn:hover {
->>>>>>> dev
   color: var(--c-action-primary);
   background-color: var(--c-action-primary-accent);
   cursor: pointer;
 }
-<<<<<<< HEAD
 .tab-btn--active i, .tab-btn:hover i {
   color: var(--c-action-primary);
 }
-=======
-
-.tab-btn--active i,
-.tab-btn:hover i {
-  color: var(--c-action-primary);
-}
-
->>>>>>> dev
 .tab-btn--active {
   font-weight: 600;
 }
 
 .main-content {
-<<<<<<< HEAD
   background-color: #EEE;
-=======
-  background-color: #eee;
->>>>>>> dev
 }
 
 .content-header {
@@ -385,10 +243,6 @@ img {
   font-family: "Lora", sans-serif;
   line-height: 1.125;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> dev
 .content-header-title small {
   display: block;
   font-weight: 400;
@@ -406,27 +260,14 @@ img {
 .link {
   color: var(--c-action-tertiary);
   text-decoration: none;
-<<<<<<< HEAD
   box-shadow: 0 1px 0 currentcolor;
   font-weight: 600;
 }
-=======
-  /* box-shadow: 0 1px 0 currentcolor; */
-  font-weight: 600;
-}
-
->>>>>>> dev
 .link i {
   display: inline-block;
   margin-left: 0.25rem;
 }
-<<<<<<< HEAD
 .link:hover, .link:focus {
-=======
-
-.link:hover,
-.link:focus {
->>>>>>> dev
   box-shadow: 0 3px 0 currentcolor;
 }
 
@@ -436,10 +277,6 @@ img {
   flex: 1;
   margin-top: -2rem;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> dev
 .content-header-illustration img {
   max-width: 400px;
   max-height: 300px;
@@ -451,10 +288,6 @@ img {
   min-height: 100px;
   padding: 2rem;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> dev
 .overview + .overview {
   margin-top: 3rem;
 }
@@ -469,10 +302,6 @@ img {
   font-size: 1.25rem;
   font-weight: 700;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> dev
 .overview-header-title span {
   display: inline-flex;
   justify-content: center;
@@ -502,10 +331,6 @@ img {
 .list {
   margin-top: 1rem;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> dev
 .list + .summary {
   margin-top: 2.5rem;
 }
@@ -518,10 +343,6 @@ img {
   align-items: center;
   justify-content: space-between;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> dev
 .list .list-item:last-child {
   border-bottom: 1px solid #dedede;
 }
@@ -563,10 +384,6 @@ img {
   color: var(--c-text-secondary);
   margin-top: 0.125rem;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> dev
 .list-item-company-hashtag + .list-item-company-hashtag {
   margin-left: 0.25rem;
 }
@@ -588,17 +405,9 @@ img {
   display: inline-flex;
   align-items: center;
 }
-<<<<<<< HEAD
 .list-item-transaction-value i {
   margin-right: 0.5rem;
 }
-=======
-
-.list-item-transaction-value i {
-  margin-right: 0.5rem;
-}
-
->>>>>>> dev
 .list-item-transaction-value--positive {
   color: var(--c-action-secondary);
 }
@@ -622,8 +431,4 @@ img {
   display: flex;
   justify-content: center;
   padding-top: 1.25rem;
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> dev
