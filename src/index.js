@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 // import './styles/style.css';
@@ -21,11 +22,22 @@ import App from './App';
 // const auth = getAuth(app);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+=======
+import React from "react";
+import ReactDOM from "react-dom/client";
+// import './styles/style.css';
+import App from "./App";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+>>>>>>> dev
 
 root.render(
   <React.StrictMode>
     <App />
+<<<<<<< HEAD
     {console.log('index.js')}
+=======
+>>>>>>> dev
   </React.StrictMode>
 );
 

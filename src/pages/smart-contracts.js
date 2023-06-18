@@ -1,101 +1,3 @@
-<<<<<<< HEAD
-import React from 'react';
-
-const Content = () => {
-  return (
-    <div className="content-body">
-      <section className="overview">
-        <header className="overview-header">
-          <h2 className="overview-header-title">
-            Smart Contracts<span>[number]</span>
-          </h2>
-          <a href="#" className="link">
-            View all
-          </a>
-        </header>
-        <div className="overview-body">
-          <div className="summary">
-            <h3 className="summary-date">Sept 09, 2020</h3>
-            {/* <span className="summary-amount">+$87.01</span> */}
-          </div>
-          <div className="list">
-            <div className="list-item">
-              <div className="list-item-company">
-                {/* <figure className="list-item-company-logo">
-                  <img src="https://assets.codepen.io/285131/spotify-logo.svg" />
-                </figure> */}
-                <div className="list-item-company-info">
-                  <h4 className="list-item-company-name">Alias1</h4>
-                  <a href="#" className="list-item-company-hashtag">
-                    0x0000...
-                  </a>
-                </div>
-              </div>
-              <div className="list-item-transaction">
-                <div className="list-item-transaction-values">
-                  <span className="list-item-transaction-value">
-                    <i className="ph-arrows-clockwise-bold"></i>Syncing
-                  </span>
-                  <time className="list-item-transaction-time" dateTime="17:00">
-                    5:00pm
-                  </time>
-                </div>
-                <button className="list-item-transaction-action">
-                  <i className="ph-caret-down-bold"></i>
-                </button>
-              </div>
-            </div>
-            <div className="list-item">
-              <div className="list-item-company">
-                <div className="list-item-company-info">
-                  <h4 className="list-item-company-name">Alias2</h4>
-                  <a href="#" className="list-item-company-hashtag">
-                    0x0000...
-                  </a>
-                </div>
-              </div>
-              <div className="list-item-transaction">
-                <div className="list-item-transaction-values">
-                  <span className="list-item-transaction-value list-item-transaction-value--positive">
-                    Complete
-                  </span>
-                  <time className="list-item-transaction-time" dateTime="11:30">
-                    11:30am
-                  </time>
-                </div>
-                <button className="list-item-transaction-action">
-                  <i className="ph-caret-down-bold"></i>
-                </button>
-              </div>
-            </div>
-            <div className="list-item">
-              <div className="list-item-company">
-                <div className="list-item-company-info">
-                  <h4 className="list-item-company-name">Alias3</h4>
-                  <a href="#" className="list-item-company-hashtag">
-                    0x0000...
-                  </a>
-                </div>
-              </div>
-              <div className="list-item-transaction">
-                <div className="list-item-transaction-values">
-                  <span className="list-item-transaction-value"> Pending</span>
-                  <time className="list-item-transaction-time" dateTime="11:23">
-                    11:23am
-                  </time>
-                </div>
-                <button className="list-item-transaction-action">
-                  <i className="ph-caret-down-bold"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <footer className="overview-footer">
-          <a href="#" className="link">
-            View all Smart Contracts<i className="ph-arrow-right-bold"></i>
-          </a>
-=======
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types"; // ES6
 import { Link } from "react-router-dom";
@@ -103,66 +5,51 @@ import {
   doc,
   getDoc,
   query,
+  getDocs,
   collection,
   where,
-  getDocs,
-  deleteDoc,
-  arrayRemove,
   updateDoc,
+  arrayRemove,
+  deleteDoc,
 } from "firebase/firestore";
 import { db as fsDatabase } from "../firebase/config";
 import { v4 as uuid4 } from "uuid";
 import { Menu, Transition } from "@headlessui/react";
+import { AuthContext } from "../contexts/AuthContext";
+// import Skeleton from "react-loading-skeleton";
+// import "react-loading-skeleton/dist/skeleton.css";
+
 import {
   DownloadIcon,
   TrashIcon,
   CheckIcon,
   RefreshIcon,
-  XCircleIcon,
 } from "@heroicons/react/outline";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css"; // optional for styling
 import "tippy.js/themes/light-border.css";
-
-const deleteContract = async (contractTimestamp, userId, setKey) => {
-  // console.log("deleteContract", contractId);
-  const contractRef = query(
-    collection(fsDatabase, "contracts"),
-    where("timestamp", "==", contractTimestamp)
-  );
-
-  const contractSnapshot = await getDocs(contractRef);
-  contractSnapshot.forEach(async (doc) => {
-    await deleteDoc(doc.ref);
-  });
-
-  // remove from smart_contracts array
-  const userRef = doc(fsDatabase, "users", userId);
-  await updateDoc(userRef, {
-    smart_contracts: arrayRemove(contractSnapshot.docs[0].id),
-  });
-  setKey(uuid4());
-};
-
-const Content = ({ userData, searchQuery }) => {
+import { useContext } from "react";
+import { Navigate } from "react-router-dom";
+import { fetchUser } from "../firebase/fetchUser";
+document.title = "Smoldata - Smart Contracts";
+const SmartContracts = ({ searchQuery }) => {
   // console.log('userData', userData);
   const [contracts, setContracts] = useState([]);
   const [contractsLoaded, setContractsLoaded] = useState(false);
+
+  const [userData, setUserData] = useState(null);
+  const { user, loading } = useContext(AuthContext);
+  const [filteredContracts, setFilteredContracts] = useState(contracts);
   const [key, setKey] = useState(0);
 
-  // console.log('contracts', contracts);
   useEffect(() => {
     const fetchContracts = async () => {
       if (userData === null) {
         return;
       }
 
-      //refetch smart_contracts
-      const userRef = doc(fsDatabase, "users", userData.uid);
-      const userSnap = await getDoc(userRef);
-      const userData2 = userSnap.data();
-      const contractIds = userData2.smart_contracts;
-      // console.log('contractIds', contractIds);
+      const contractIds = userData.smart_contracts;
+      //   console.log("contractIds", contractIds);
       const contract = contractIds.map(async (contractId) => {
         const getSc = await getDoc(doc(fsDatabase, "contracts", contractId));
         let scData;
@@ -179,47 +66,73 @@ const Content = ({ userData, searchQuery }) => {
       const contractsResolved = await Promise.all(contract);
 
       setContracts(contractsResolved);
-      setContractsLoaded(true);
+      setFilteredContracts(contractsResolved);
     };
     fetchContracts();
+    setContractsLoaded(true);
   }, [userData, key]);
 
-  // filter contracts based on searchQuery on contract.name and contract.address
   useEffect(() => {
     // console.log("searchQuery", searchQuery, contracts);
     if (searchQuery === "" || !contractsLoaded) {
+      setFilteredContracts(contracts);
       return;
     }
-    const filteredContracts = contracts.filter((contract) => {
-      return (
-        contract.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        contract.address.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    });
-    setContracts(filteredContracts);
+    setFilteredContracts(
+      contracts.filter((contract) => {
+        return (
+          contract.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          contract.address.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      })
+    );
+    //   setContracts(filteredContracts);
   }, [searchQuery, contractsLoaded]);
 
-  // filter contracts based on searchQuery on contract.name and contract.address
-  // useEffect(() => {
-  //   console.log("searchQuery", searchQuery, contracts);
-  //   if (searchQuery === "") {
-  //     return;
-  //   }
-  //   const filteredContracts = contracts.filter((contract) => {
-  //     return (
-  //       contract.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //       contract.address.toLowerCase().includes(searchQuery.toLowerCase())
-  //     );
-  //   });
-  //   setContracts(filteredContracts);
-  // }, [searchQuery]);
-
-  if (userData === null) {
-    return (
-      <></>
-      // <div className="content-body">
+  const deleteContract = async (contractTimestamp, userId, setKey) => {
+    // console.log("deleteContract", contractId);
+    const contractRef = query(
+      collection(fsDatabase, "contracts"),
+      where("timestamp", "==", contractTimestamp)
     );
+
+    const contractSnapshot = await getDocs(contractRef);
+    contractSnapshot.forEach(async (doc) => {
+      await deleteDoc(doc.ref);
+    });
+
+    // remove from smart_contracts array
+    const userRef = doc(fsDatabase, "users", userId);
+    await updateDoc(userRef, {
+      smart_contracts: arrayRemove(contractSnapshot.docs[0].id),
+    });
+    setKey(uuid4());
+  };
+  if (loading && !user) {
+    // console.log('Dashboard loading', loading, user);
+    return (
+      <main className="main">
+        {/* <Nav /> */}
+        <div className="content">
+          <div>Loading..</div>
+        </div>
+      </main>
+    );
+  } else if (!loading && !user) {
+    // console.log('Dashboard !loading', loading, user);
+    return <Navigate to="/" />;
   }
+  const load_user_data = async () => {
+    // console.log('calling');
+    const res = await fetchUser(user.uid);
+    console.log("res", res);
+    setUserData(res);
+  };
+  if (!userData) {
+    load_user_data();
+    return <div>Loading...</div>;
+  }
+
   const getEventBadges = (events) => {
     const eventNames = Object.keys(events);
     const firstThreeEvents = eventNames.slice(0, 3);
@@ -356,7 +269,7 @@ const Content = ({ userData, searchQuery }) => {
           </h2>
           <div className="flex gap-2  text-right">
             <Link
-              to="addContract"
+              to="/dashboard/addContract"
               className="link hover:!no-underline !no-underline"
             >
               Add new contract
@@ -369,9 +282,8 @@ const Content = ({ userData, searchQuery }) => {
             {/* <span className="summary-amount">+$87.01</span> */}
           </div>
           <div className="list">
-            {Object.values(contracts)
+            {Object.values(filteredContracts)
               .reverse()
-              .slice(0, 4)
               .map((contract) => (
                 <div className="list-item " key={uuid4()}>
                   <div className="list-item-company text-ellipsis  overflow-auto">
@@ -396,19 +308,12 @@ const Content = ({ userData, searchQuery }) => {
                         className={`list-item-transaction-value ${
                           contract.status === "pending"
                             ? ""
-                            : contract.status === "failed"
-                            ? "list-item-transaction-value--negative text-red-800"
                             : "list-item-transaction-value--positive"
                         }`}
                       >
                         {contract.status === "pending" ? (
                           <>
                             <i className="ph-arrows-clockwise-bold"></i>Syncing
-                          </>
-                        ) : contract.status === "failed" ? (
-                          <>
-                            <i className="ph-x-circle-bold text-red-800"></i>
-                            Failed
                           </>
                         ) : (
                           "Complete"
@@ -469,11 +374,6 @@ const Content = ({ userData, searchQuery }) => {
                                       <RefreshIcon className="w-5 h-5 mr-2" />
                                       Syncing
                                     </>
-                                  ) : contract.status === "failed" ? (
-                                    <>
-                                      <XCircleIcon className="w-5 h-5 mr-2" />
-                                      Failed
-                                    </>
                                   ) : (
                                     <>
                                       <CheckIcon className="w-5 h-5 mr-2" />
@@ -517,11 +417,9 @@ const Content = ({ userData, searchQuery }) => {
                                       : "text-gray-700"
                                   } flex items-center w-full px-4 py-2 text-sm`}
                                   onClick={() => {
-                                    console.log("Delete clicked");
-                                    // delete firestore item based on timestamp
                                     deleteContract(
                                       contract.timestamp,
-                                      userData.uid,
+                                      contract.id,
                                       setKey
                                     );
                                   }}
@@ -540,25 +438,14 @@ const Content = ({ userData, searchQuery }) => {
               ))}
           </div>
         </div>
-        <footer className="overview-footer">
-          <Link to="/smart-contracts" className="link">
-            View all {contracts.length} Smart Contracts
-            <i className="ph-arrow-right-bold"></i>
-          </Link>
->>>>>>> dev
-        </footer>
       </section>
     </div>
   );
 };
 
-<<<<<<< HEAD
-=======
 //prop types
-Content.propTypes = {
-  userData: PropTypes.object,
+SmartContracts.propTypes = {
   searchQuery: PropTypes.string,
 };
 
->>>>>>> dev
-export default Content;
+export default SmartContracts;
