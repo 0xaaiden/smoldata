@@ -419,7 +419,7 @@ const SmartContracts = ({ searchQuery }) => {
                                   onClick={() => {
                                     deleteContract(
                                       contract.timestamp,
-                                      contract.id,
+                                      userData.uid,
                                       setKey
                                     );
                                   }}
