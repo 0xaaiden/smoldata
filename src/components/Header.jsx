@@ -20,17 +20,22 @@ const Header = ({ onSearch }) => {
     <header className="header">
       <h1 className="header-logo">smoldata.</h1>
       <div className="header-content">
-        <div className="header-search">
-          <input
-            type="text"
-            className="search-field"
-            placeholder="Search..."
-            onChange={onSearch}
-          />
-          <button type="submit" className="search-btn">
-            <i className="ph-magnifying-glass-bold"></i>
-          </button>
-        </div>
+        {user.user ? (
+          <div className="header-search">
+            <input
+              type="text"
+              className="search-field"
+              placeholder="Search..."
+              onChange={onSearch}
+            />
+            <button type="submit" className="search-btn">
+              <i className="ph-magnifying-glass-bold"></i>
+            </button>
+          </div>
+        ) : (
+          <div className="header-search"></div>
+        )}
+
         <div className="header-nav">
           <button
             className="header-connect bg-orange-100"
