@@ -125,18 +125,18 @@ export const Homepage = () => {
             </p>
             <form action="#" className="mt-8 sm:max-w-lg sm:w-full sm:flex">
               <div className="">
-                <a
-                  href="https://github.com/0xaaiden/smoldata"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  type="submit"
+                  className="flex justify-center items-center w-full text-base rounded-md border border-orange-500 px-5 py-3 bg-white font-medium text-orange-500 shadow hover:bg-orange-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 sm:px-10"
                 >
-                  <button
-                    type="submit"
-                    className="flex justify-center items-center w-full text-base rounded-md border border-orange-500 px-5 py-3 bg-white font-medium text-orange-500 shadow hover:bg-orange-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 sm:px-10"
+                  <a
+                    href="https://github.com/0xaaiden/smoldata"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     <i className="ph-github-logo mr-2"></i>Github
-                  </button>
-                </a>
+                  </a>
+                </button>
               </div>
             </form>
           </div>
