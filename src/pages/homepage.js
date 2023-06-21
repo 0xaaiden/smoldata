@@ -77,8 +77,9 @@ const quickActions = [
   // { name: 'Add label...', icon: TagIcon, shortcut: 'L', url: '#' }
 ];
 
-document.title = "Smoldata - Zero-ETL indexing for smart contracts";
 export const Homepage = () => {
+  document.title = "Smoldata - Zero-ETL indexing for smart contracts";
+
   const user = useContext(AuthContext);
   if (user.user) {
     return <Navigate to="/dashboard" />;
